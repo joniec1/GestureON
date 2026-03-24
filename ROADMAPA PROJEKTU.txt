@@ -1,0 +1,235 @@
+ROADMAPA PROJEKTU – ROZPOZNAWANIE JĘZYKA MIGOWEGO
+
+==================================================
+FAZA 0 – DEFINICJA PROJEKTU
+==================================================
+Cel:
+- Ustalenie zakresu MVP i uniknięcie rozlania projektu
+
+Zadania:
+- Zdefiniować MVP:
+  - tylko statyczne znaki
+  - jedna dłoń
+  - 3–5 gestów
+- Ustalić pipeline:
+  kamera → MediaPipe → landmarki → model → predykcja
+- Podział ról w zespole
+- Wybrać roboczą nazwę projektu
+- Spisać wymagania funkcjonalne
+
+Milestone M0:
+- Jest brief projektu (1 strona)
+- Lista gestów MVP
+- Podział odpowiedzialności
+
+
+==================================================
+FAZA 1 – PROOF OF CONCEPT (LOKALNIE)
+==================================================
+Cel:
+- Działający system end-to-end
+
+Zadania:
+- Stream z telefonu
+- Wykrywanie dłoni (MediaPipe)
+- Wizualizacja landmarków
+- Zbieranie danych (CSV)
+- Trening modelu (statyczne gesty)
+- Live prediction (kamera → wynik)
+
+Milestone M1:
+- System rozpoznaje 3 gesty na żywo
+- Jest demo video
+- Repo działa od zera
+
+
+==================================================
+FAZA 2 – DATASET (JAKOŚĆ DANYCH)
+==================================================
+Cel:
+- Zbudowanie sensownego datasetu
+
+Zadania:
+- Ustalić strukturę danych:
+  gesture, timestamp, user_id, session_id, features
+- Zbieranie danych w sesjach
+- Zmienność:
+  - pozycja dłoni
+  - odległość
+  - światło
+- Dodać drugą osobę
+- Walidacja danych:
+  - czy dłoń wykryta
+  - brak outlierów
+
+Milestone M2:
+- Dataset uporządkowany
+- ≥5 gestów
+- ≥2 użytkowników
+- Dane różnorodne
+
+
+==================================================
+FAZA 3 – POPRAWA MODELU
+==================================================
+Cel:
+- Stabilny model, nie tylko demo
+
+Zadania:
+- Normalizacja landmarków:
+  - odejmowanie nadgarstka
+  - skalowanie dłoni
+- Smoothing:
+  - majority vote
+- Confidence threshold
+- Test na nowych danych
+- Porównanie modeli:
+  MLP / Random Forest / SVM
+
+Milestone M3:
+- Model stabilny
+- Działa na nowych danych
+- Nie skacze między klasami
+
+
+==================================================
+FAZA 4 – ROZSZERZENIE MVP
+==================================================
+Cel:
+- Zwiększenie użyteczności
+
+Zadania:
+- 8–12 gestów
+- Uporządkowanie labeli
+- Prosty UI desktop:
+  - kamera
+  - wynik
+  - confidence
+- Logowanie błędów
+
+Milestone M4:
+- System rozpoznaje więcej gestów
+- Działa jako demo dla innych
+
+
+==================================================
+FAZA 5 – BACKEND / BAZA
+==================================================
+Cel:
+- Przejście z CSV na centralne dane
+
+Zadania:
+- Wybrać backend:
+  Firebase / Supabase
+- Struktura:
+  users, sessions, gestures, samples
+- Upload danych
+- Eksport do treningu
+
+Milestone M5:
+- Dane zapisują się w bazie
+- Można filtrować dane
+
+
+==================================================
+FAZA 6 – APLIKACJA MOBILNA (DATA COLLECTION)
+==================================================
+Cel:
+- Zbieranie danych od użytkowników
+
+Zadania:
+- Wybrać stack:
+  Flutter / React Native
+- Tryby:
+  - zbieranie danych
+  - test modelu
+- UI:
+  - instrukcje gestu
+  - feedback
+- Nagrywanie + wysyłanie danych
+
+Milestone M6:
+- Aplikacja zbiera dane i wysyła do bazy
+
+
+==================================================
+FAZA 7 – GESTY DYNAMICZNE
+==================================================
+Cel:
+- Rozpoznawanie ruchu
+
+Zadania:
+- Sekwencje klatek
+- Nowy dataset (time series)
+- Modele:
+  LSTM / GRU / temporal CNN
+- Segmentacja gestów
+
+Milestone M7:
+- Rozpoznawanie prostych gestów dynamicznych
+
+
+==================================================
+FAZA 8 – TESTY UŻYTKOWNIKÓW
+==================================================
+Cel:
+- Walidacja w realnym świecie
+
+Zadania:
+- Testy na grupie użytkowników
+- Zbieranie feedbacku
+- Analiza błędów
+- Iteracja modelu
+
+Milestone M8:
+- System przetestowany przez użytkowników
+- Znane problemy i ich przyczyny
+
+
+==================================================
+FAZA 9 – WERSJA POKAZOWA / GRANT
+==================================================
+Cel:
+- Gotowy projekt do prezentacji
+
+Zadania:
+- Demo video
+- Prezentacja systemu
+- Architektura
+- Use-case’y
+- Ograniczenia i dalszy rozwój
+
+Milestone M9:
+- Projekt gotowy do pokazania / grantu
+
+
+==================================================
+PRIORYTETY (NA TERAZ)
+==================================================
+1. Normalizacja danych
+2. Lepszy dataset
+3. Stabilizacja predykcji
+4. Test na innej osobie
+
+
+==================================================
+NAJBLIŻSZE SPRINTY
+==================================================
+
+Sprint 1:
+- normalizacja
+- dataset poprawa
+- retrening
+- test live
+
+Sprint 2:
+- smoothing
+- test na 2 osobie
+- więcej gestów
+
+Sprint 3:
+- struktura danych
+- przygotowanie bazy
+
+Sprint 4:
+- prosty collector (web/mobile)
