@@ -1,12 +1,20 @@
+import sys
+import os
 from pathlib import Path
 from enum import Enum
 
-BASE_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = BASE_DIR.parent
+def get_resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        return Path(sys._MEIPASS) / relative_path
 
-HAND_LANDMARKER_PATH = PROJECT_ROOT / "model" / "hand_landmarker.task"
-MODEL_PATH = PROJECT_ROOT / "model" / "model.pkl"
-DATA_DIR = PROJECT_ROOT / "data"
+    base_dir = Path(__file__).resolve().parent.parent
+    return base_dir / relative_path
+
+MODEL_DIR = get_resource_path("model")
+DATA_DIR = get_resource_path("data")
+
+HAND_LANDMARKER_PATH = MODEL_DIR / "hand_landmarker.task"
+MODEL_PATH = MODEL_DIR / "model.pkl"
 
 
 class GestureLabel(Enum):
