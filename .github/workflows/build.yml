@@ -1,0 +1,48 @@
+name: Build and Release Windows EXE
+
+on:
+  push:
+    branches: [ main, master ] # Buduje przy każdym pushu na główną gałąź
+    tags:
+      - 'v*' # Buduje i tworzy Release, gdy dodasz tag np. v1.0
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12' # Zmień na swoją wersję jeśli trzeba
+
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          .\venv\Scripts\activate
+          python -m pip install --upgrade pip
+          if (Test-Path requirements.txt) { pip install -r requirements.txt }
+          pip install pyinstaller
+
+      - name: Build EXE with PyInstaller
+        run: |
+          .\venv\Scripts\activate
+          # Budujemy EXE, dołączając foldery model i data
+          pyinstaller --onefile --noconfirm --windowed --add-data "model;model" --add-data "data;data" main.py
+
+      - name: Upload Artifact (Pre-release)
+        uses: actions/upload-artifact@v4
+        with:
+          name: GestureApp-Windows
+          path: dist/main.exe
+
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/main.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
