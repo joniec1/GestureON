@@ -2,22 +2,22 @@ name: Build and Release Windows EXE
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
     tags:
       - "v*"
 
 jobs:
-  build-windows:
+  build:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Install dependencies
         run: |
@@ -27,24 +27,25 @@ jobs:
 
       - name: Build EXE
         run: |
-          pyinstaller --noconfirm --onefile ^
-            --add-data "model;model" ^
-            --add-data "data;data" ^
-            main.py
-
-      - name: Show dist folder (DEBUG)
-        run: dir dist
+          pyinstaller src/main.py `
+            --name GestureON `
+            --onefile `
+            --noconfirm `
+            --windowed `
+            --add-data "model;model" `
+            --add-data "data;data" `
+            --paths src
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: GestureON-Windows
-          path: dist/*.exe
+          path: dist/GestureON.exe
 
-      - name: Create GitHub Release
+      - name: Create Release
         if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v1
         with:
-          files: dist/*.exe
+          files: dist/GestureON.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
