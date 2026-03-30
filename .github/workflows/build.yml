@@ -27,12 +27,12 @@ jobs:
 
       - name: Build EXE
         run: |
-          pyinstaller src/main.py ^
-            --name GestureON ^
-            --onefile ^
-            --noconfirm ^
-            --windowed ^
-            --paths src ^
+          pyinstaller src/main.py `
+            --name GestureON `
+            --onefile `
+            --noconfirm `
+            --windowed `
+            --paths src `
             --add-data "model;model"
 
       - name: Debug dist folder
