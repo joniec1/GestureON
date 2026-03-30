@@ -12,6 +12,7 @@ def get_resource_path(relative_path):
 
 MODEL_DIR = get_resource_path("model")
 DATA_DIR = get_resource_path("data")
+DATA_DIR.mkdir(exist_ok=True)
 
 HAND_LANDMARKER_PATH = MODEL_DIR / "hand_landmarker.task"
 MODEL_PATH = MODEL_DIR / "model.pkl"
