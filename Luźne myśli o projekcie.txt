@@ -1,0 +1,26 @@
+Lista rzeczy do zrobienia:
+1. Aplikacja mobilna na telefon.
+
+Krótki opis: aplikacja mobilna która pozwala na nagrywanie z przedniej kamery, wyświetla ci instrukcje np. krótki filmik albo odnośnik jak wykonać dany symbol w języku migowym
+użytkownik wykonuje ten symbol, po wciśnięciu przycisku rejestrowane jest np. 300 klatek w odstępach co np. 5ms. Nagrane klatki lecą do bazy. Drugi tryb to możliwość testowania
+modelu przez użytkownika. Ocena czy aplikacja dobrze odczytała dany symbol
+
+Funkcjonalności:
+- przejrzysty interfejs, instrukcja co należy kolejno zrobić (zbierane dane do nauki modelu muszą być dobre żeby to miało sens) - frontend
+- aplikacja nie zapisuje nagrania (chyba, że była by potrzeba ręcznego sprawdzania czy użytkownik zrobił poprawny symbol, albo czy aplikacja wgl dobrze wykryła położenie dłoni,
+zapis całego nagrania potrzebny do testowania aplikacji). Docelowo do bazy lecą tylko współrzędne danych punktów na dłoni.
+- połączenie aplikacji z bazą danych (research jak to zrobić, w jakieś chmurze czy jak). Szybki zapis i odczyt danych. Może jakiś model do wykrywania jakiś odchyleń (np. ktoś
+specjalnie robi zły symbol - po prostu detekcja ewidentnie nieprawidłowych danych wejściowych - przydatne również przy testowaniu.
+
+Wymyślenie i wybranie nazwy
+Znalezienie grupy osób które był by chętne na korzystanie z aplikacji (np. jakieś kółko osób głuchoniemych)
+
+
+2. Baza danych
+Krótki opis:
+Baza która będzie zapisywała wektory dla danego znaku z języka migowego. Na pewno dostęp po typach znaku, po dacie, kto zrobił dany znak - wszystkie niezbędne informacje.
+Ogarnąć skrypty sqlowskie do łatwego odczytu tych wektorów. 
+
+3.Model IA
+Research jaki model będzie najbardziej odpowiedni (na początek proste statyczne znaki, potem analiza np. ruchu dłoni - branie np. iluś poprzednich klatek i przekładanie tego np. na machanie ręką czy inny ruch.
+
