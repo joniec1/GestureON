@@ -1,3 +1,12 @@
+"""
+Centralny klient Supabase używany w projekcie.
+
+Odpowiada za:
+- wczytanie .env
+- inicjalizację klienta Supabase
+"""
+
+
 import os
 from dotenv import load_dotenv
 from supabase import create_client
