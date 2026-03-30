@@ -1,8 +1,11 @@
+
 name: Build and Release Windows EXE
+
+permissions:
+  contents: write
 
 on:
   push:
-    branches: [ main ]
     tags:
       - "v*"
 
@@ -36,7 +39,9 @@ jobs:
             --add-data "model;model" `
             --collect-all PyQt5 `
             --collect-all cv2 `
-            --collect-all mediapipe
+            --collect-all mediapipe `
+            --collect-all sklearn `
+            --collect-all joblib
 
       - name: Debug dist folder
         run: dir dist

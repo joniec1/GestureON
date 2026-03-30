@@ -4,7 +4,6 @@ from config import MODEL_PATH, GESTURE_TEXT, DATA_DIR, GestureLabel
 import numpy as np
 
 
-labels = ["open_hand", "fist", "thumbs_up"] # test
 class ModelAI:
     def __init__(self):
         self.model = joblib.load(str(MODEL_PATH))
