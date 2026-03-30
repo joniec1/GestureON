@@ -34,6 +34,9 @@ jobs:
             --windowed `
             --paths src `
             --add-data "model;model"
+            --collect-all PyQt5 `
+            --collect-all cv2 `
+            --collect-all mediapipe
 
       - name: Debug dist folder
         run: dir dist
