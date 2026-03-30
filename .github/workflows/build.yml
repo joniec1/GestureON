@@ -1,8 +1,10 @@
 name: Build and Release Windows EXE
 
+permissions:
+  contents: write
+
 on:
   push:
-    branches: [ main ]
     tags:
       - "v*"
 
@@ -31,7 +33,6 @@ jobs:
             --name GestureON `
             --onefile `
             --noconfirm `
-            --windowed `
             --paths src `
             --add-data "model;model" `
             --collect-all PyQt5 `
