@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Any, Sequence
 
+import math
+
 
 from db.db_operations import (
     create_user,
@@ -37,6 +39,7 @@ class LandmarkSessionCollector:
         lighting: str | None = None,
         validate_landmarks: bool = True,
         auto_create_user: bool = True,
+        user_id: str | None = None
     ) -> None:
         self.nickname = nickname
         self.gesture_name = gesture_name
@@ -46,12 +49,13 @@ class LandmarkSessionCollector:
         self.validate_landmarks = validate_landmarks
         self.auto_create_user = auto_create_user
 
-        self.user_id: str | None = None
+        self.user_id: str | None = user_id
         self.gesture_id: str | None = None
         self.session_id: str | None = None
 
         self.frame_counter: int = 0
         self.is_session_active: bool = False
+        
 
     # =========================
     # Public API
@@ -103,14 +107,12 @@ class LandmarkSessionCollector:
         return sample_id
 
     def end_session(self) -> None:
-        """
-        Kończy sesję logicznie.
-        Na ten moment nie zapisuje dodatkowych danych do DB.
-        """
         if not self.is_session_active:
             return
 
         self.is_session_active = False
+        self.session_id = None
+        self.frame_counter = 0
 
     def reset_session(self) -> None:
         """
@@ -205,12 +207,14 @@ class LandmarkSessionCollector:
         if not isinstance(landmarks, list):
             raise TypeError("Landmarks must be a list.")
 
-        if len(landmarks) == 0:
-            raise ValueError("Landmarks list is empty.")
+        if len(landmarks) != 42:
+            raise ValueError("Landmarks list must contain exactly 42 values.")
 
         for value in landmarks:
             if not isinstance(value, (int, float)):
                 raise TypeError("All landmark values must be int or float.")
+            if math.isnan(value) or math.isinf(value):
+                raise ValueError("Landmark values cannot be NaN or infinity.")
 
     def _prepare_landmarks(self, landmarks: Sequence[float | int]) -> list[float]:
         """
