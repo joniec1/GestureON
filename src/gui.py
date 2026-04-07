@@ -2,6 +2,7 @@ from config import *
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QLabel, QWidget, QPushButton, QVBoxLayout, QInputDialog, QStackedWidget
 from PyQt5.QtGui import QImage, QPixmap
+from storage import DataStorage
 from camera import CameraThread
 from model import ModelAI
 
@@ -12,7 +13,7 @@ class Mode:
     RECOGNIZE = 1
 
 class MainWindow(QMainWindow):
-    def __init__(self, source, mode):
+    def __init__(self, source, mode, nickname = None):
         super().__init__()
         self.display_label = QLabel(self)
         self.setup_ui()
@@ -20,6 +21,7 @@ class MainWindow(QMainWindow):
         
         self.saving = False
         self.label = None
+        self.collector = DataStorage(nickname)
 
         self.mode = mode
         self.change_label_mode()
@@ -67,9 +69,10 @@ class MainWindow(QMainWindow):
             return
         
         if self.mode == Mode.COLLECT and self.saving:
-            label_text = handler(data, self.label)
+            label_text, data = handler(data, self.label)
             self.saving = False
             self.draw_label(label_text)
+            self.collector.save(data)
 
         elif self.mode == Mode.RECOGNIZE:
             label_text = handler(data)
@@ -89,6 +92,7 @@ class MainWindow(QMainWindow):
         self.display_label.setPixmap(scaled_pixmap)
 
     def closeEvent(self, event): # type: ignore
+        self.collector.end()
         self.camera_thread.stop()
         self.camera_thread.wait()
         
@@ -108,6 +112,7 @@ class MainWindow(QMainWindow):
             if ok:
                 self.label = int(label)
                 self.draw_label(GESTURE_TEXT[GestureLabel(self.label)])
+                self.collector.change_gesture(GestureLabel(self.label).name)
 
     def draw_label(self, text):
         self.text_label.setText(text)
@@ -126,6 +131,8 @@ class StartWindow(QWidget):
         self.main_layout = QVBoxLayout()
         self.setLayout(self.main_layout)
         self.main_layout.addWidget(self.stack)
+
+        self.nickname = None
 
         self.init_camera_page()
         self.init_mode_page()
@@ -158,14 +165,20 @@ class StartWindow(QWidget):
         self.btn_collect = QPushButton("Collect")
         self.btn_test = QPushButton("Test")
 
-        self.btn_collect.clicked.connect(lambda : self.set_mode(Mode.COLLECT))
-        self.btn_test.clicked.connect(lambda : self.set_mode(Mode.RECOGNIZE))
+        self.btn_collect.clicked.connect(lambda : self.set_mode_and_nickname(Mode.COLLECT))
+        self.btn_test.clicked.connect(lambda : self.set_mode_and_nickname(Mode.RECOGNIZE))
 
         layout.addWidget(self.btn_collect)
         layout.addWidget(self.btn_test)
 
         self.mode_page.setLayout(layout)
         self.stack.addWidget(self.mode_page)
+
+    def provide_nickname(self):
+        nickname, ok = QInputDialog.getText(self, "Nickname", "Podaj nickname:")
+        if ok:
+            self.nickname = nickname
+
 
     def start_local(self, index):
         self.source = index
@@ -177,12 +190,14 @@ class StartWindow(QWidget):
             self.source = url
             self.stack.setCurrentWidget(self.mode_page)
 
-    def set_mode(self, new_mode):
+    def set_mode_and_nickname(self, new_mode):
         self.mode = new_mode
+        if self.mode == Mode.COLLECT:
+            self.provide_nickname()
         self.open_main()
 
 
     def open_main(self):
-        self.main = MainWindow(self.source, self.mode)
+        self.main = MainWindow(self.source, self.mode, self.nickname)
         self.main.show()
         self.close()

@@ -26,21 +26,14 @@ class ModelAI:
 
     def collect(self, result, label):
 
-        file_path = str(DATA_DIR / f"{GestureLabel(label).name}.csv")
         data = []
-        with open(file_path, mode="a", newline="") as f:
-            writer = csv.writer(f)
+        if result.hand_landmarks:
+            for hand_landmarks in result.hand_landmarks:
+                for lm in hand_landmarks:
+                    data.append(lm.x)
+                    data.append(lm.y)
 
-            if result.hand_landmarks:
-                for hand_landmarks in result.hand_landmarks:
-                    for lm in hand_landmarks:
-                        data.append(lm.x)
-                        data.append(lm.y)
-
-                    if data is not None and len(data) == 42:
-                        writer.writerow(data)
-
-        return GESTURE_TEXT[GestureLabel(label)]
+        return GESTURE_TEXT[GestureLabel(label)], data
 
 
 
